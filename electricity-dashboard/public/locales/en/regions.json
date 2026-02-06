@@ -1,0 +1,40 @@
+{
+  "title": "Regions",
+  "subtitle": "View reliability and outage data for all regions",
+  "searchPlaceholder": "Search regions...",
+  "reliability": "Reliability",
+  "customers": "Customers",
+  "activeOutages": "active outages",
+  "totalOutages": "total outages",
+  "reliabilityChart": "Reliability Comparison",
+  "outageTrend": "Outage Distribution",
+  "status": {
+    "healthy": "Healthy",
+    "degraded": "Degraded",
+    "critical": "Critical",
+    "offline": "Offline"
+  },
+  "outageStatus": {
+    "active": "Active",
+    "resolved": "Resolved",
+    "scheduled": "Scheduled",
+    "investigating": "Investigating"
+  },
+  "detail": {
+    "back": "Back",
+    "customers": "Total Customers",
+    "activeOutages": "Active Outages",
+    "avgResolution": "Avg Resolution",
+    "outagesInRegion": "Outages in Region"
+  },
+  "error": {
+    "title": "Error Loading Regions",
+    "description": "Failed to load region data. Please try again.",
+    "notFound": "Region Not Found",
+    "notFoundDescription": "The region you are looking for does not exist."
+  },
+  "empty": {
+    "title": "No Regions Found",
+    "description": "No regions match your search."
+  }
+}

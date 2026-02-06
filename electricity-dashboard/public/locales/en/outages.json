@@ -1,0 +1,66 @@
+{
+  "title": "Outages",
+  "subtitle": "Monitor and manage all electricity outages across regions",
+  "status": {
+    "active": "Active",
+    "resolved": "Resolved",
+    "scheduled": "Scheduled",
+    "investigating": "Investigating"
+  },
+  "type": {
+    "planned": "Planned",
+    "unplanned": "Unplanned",
+    "emergency": "Emergency",
+    "maintenance": "Maintenance"
+  },
+  "severity": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "table": {
+    "title": "Title",
+    "status": "Status",
+    "type": "Type",
+    "region": "Region",
+    "city": "City",
+    "affected": "Affected",
+    "duration": "Duration",
+    "startedAt": "Started At"
+  },
+  "filters": {
+    "search": "Search outages...",
+    "allStatuses": "All Statuses",
+    "allTypes": "All Types",
+    "allSeverities": "All Severities",
+    "reset": "Reset Filters"
+  },
+  "duration": "Duration",
+  "affectedCustomers": "Affected customers",
+  "timeline": {
+    "title": "Timeline"
+  },
+  "detail": {
+    "back": "Back",
+    "status": "Status",
+    "type": "Type",
+    "region": "Region",
+    "city": "City",
+    "affected": "Affected Customers",
+    "duration": "Duration",
+    "startedAt": "Started At",
+    "eta": "Est. Restoration",
+    "unknown": "Unknown"
+  },
+  "error": {
+    "title": "Error Loading Outages",
+    "description": "Failed to load outage data. Please try again.",
+    "notFound": "Outage Not Found",
+    "notFoundDescription": "The outage you are looking for does not exist."
+  },
+  "empty": {
+    "title": "No Outages Found",
+    "description": "No outages match your current filters."
+  }
+}

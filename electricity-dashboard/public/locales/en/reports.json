@@ -1,0 +1,29 @@
+{
+  "title": "Reports",
+  "subtitle": "Analytics and insights on grid performance",
+  "exportCsv": "Export CSV",
+  "kpi": {
+    "totalOutages": "Total Outages",
+    "activeOutages": "Active Outages",
+    "resolvedOutages": "Resolved Outages",
+    "affectedCustomers": "Affected Customers",
+    "avgResolution": "Avg Resolution",
+    "totalAlerts": "Total Alerts",
+    "criticalAlerts": "Critical Alerts",
+    "reliability": "Avg Reliability"
+  },
+  "charts": {
+    "monthlyTrend": "Monthly Outage Trend",
+    "severityDistribution": "Severity Distribution",
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    }
+  },
+  "error": {
+    "title": "Error Loading Reports",
+    "description": "Failed to load report data. Please try again."
+  }
+}

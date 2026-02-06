@@ -1,0 +1,23 @@
+{
+  "title": "Settings",
+  "subtitle": "Configure your dashboard preferences",
+  "theme": {
+    "title": "Theme",
+    "description": "Choose your preferred theme for the dashboard.",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "title": "Language",
+    "description": "Select your preferred language."
+  },
+  "preferences": {
+    "title": "Preferences",
+    "subtitle": "Manage notification and refresh preferences",
+    "notifications": "Notifications",
+    "enableNotifications": "Enable push notifications",
+    "emailNotifications": "Enable email notifications",
+    "autoRefresh": "Auto Refresh Interval"
+  }
+}

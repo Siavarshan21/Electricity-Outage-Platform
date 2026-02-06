@@ -1,0 +1,1 @@
+{"root":["./vite.config.ts","./scripts/check-hardcoding.ts","./scripts/generate-i18n-keys.ts"],"version":"5.9.3"}

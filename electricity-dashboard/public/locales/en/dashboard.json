@@ -1,0 +1,15 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Real-time overview of grid health and outage intelligence",
+  "kpi": {
+    "activeOutages": "Active Outages",
+    "affectedCustomers": "Affected Customers",
+    "avgResolutionTime": "Avg Resolution Time",
+    "reliability": "Avg Reliability"
+  },
+  "activeOutagesMap": "Active Outages",
+  "noActiveOutages": "No active outages at this time",
+  "liveAlerts": "Live Alerts",
+  "regionHealth": "Region Health Ranking",
+  "activeOutages": "active outages"
+}

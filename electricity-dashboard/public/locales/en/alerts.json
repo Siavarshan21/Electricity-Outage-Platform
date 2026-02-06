@@ -1,0 +1,36 @@
+{
+  "title": "Alerts",
+  "subtitle": "Monitor live alerts from across the grid",
+  "noAlerts": "No alerts at this time",
+  "severity": {
+    "info": "Info",
+    "warning": "Warning",
+    "error": "Error",
+    "critical": "Critical"
+  },
+  "source": {
+    "system": "System",
+    "sensor": "Sensor",
+    "manual": "Manual",
+    "automated": "Automated"
+  },
+  "filters": {
+    "allSeverities": "All Severities"
+  },
+  "details": {
+    "title": "Alert Details",
+    "region": "Region",
+    "acknowledged": "Acknowledged",
+    "yes": "Yes",
+    "no": "No",
+    "createdAt": "Created At"
+  },
+  "error": {
+    "title": "Error Loading Alerts",
+    "description": "Failed to load alert data. Please try again."
+  },
+  "empty": {
+    "title": "No Alerts",
+    "description": "No alerts match your current filters."
+  }
+}

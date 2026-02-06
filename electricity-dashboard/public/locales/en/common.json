@@ -1,0 +1,38 @@
+{
+  "loading": "Loading...",
+  "close": "Close",
+  "save": "Save",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "delete": "Delete",
+  "edit": "Edit",
+  "view": "View",
+  "search": "Search",
+  "filter": "Filter",
+  "reset": "Reset",
+  "noResults": "No results found",
+  "toggleTheme": "Toggle theme",
+  "emptyState": {
+    "title": "No data available",
+    "description": "There is no data to display at this time."
+  },
+  "table": {
+    "noData": "No data available",
+    "page": "Page",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "settings": "Settings",
+    "authenticated": "Authenticated",
+    "unauthenticated": "Not authenticated",
+    "welcomeTitle": "Electricity Dashboard",
+    "welcomeSubtitle": "Sign in to monitor outages and manage your grid",
+    "loginError": "Invalid credentials. Please try again."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": "GridWatch",
+  "home": "Home",
+  "dashboard": "Dashboard",
+  "outages": "Outages",
+  "regions": "Regions",
+  "alerts": "Alerts",
+  "reports": "Reports",
+  "settings": "Settings"
+}
