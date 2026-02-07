@@ -11,12 +11,22 @@ import { EmptyState } from "@/shared/ui/emptyState/EmptyState";
 import { RegionStatusBadge } from "@/features/regions/ui/RegionStatusBadge";
 import { ReliabilityScore } from "@/features/regions/ui/ReliabilityScore";
 import { RegionOutageTrendChart } from "@/widgets/regions/RegionOutageTrendChart";
+import { CityGrid } from "@/widgets/regions/CityGrid";
 import { OutagesTable } from "@/widgets/outages/OutagesTable";
+import { ThreeCanvasShell } from "@/widgets/three/ThreeCanvasShell";
+import { EnergyFlowScene } from "@/widgets/three/EnergyFlowScene";
+import { BabylonCanvas } from "@/widgets/babylon/BabylonCanvas";
 import { regionsApi } from "@/features/regions/api/regionsApi";
 import { regionsQueryKeys } from "@/features/regions/api/regionsQueryKeys";
 import { formatNumber } from "@/shared/utils/formatters";
 import { formatDuration } from "@/shared/utils/date";
-import { pageTransition, staggerContainer, slideUp } from "@/shared/config/motion";
+import {
+  pageTransition,
+  staggerContainer,
+  slideUp,
+  bounceIn,
+  popIn,
+} from "@/shared/config/motion";
 
 export const RegionDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,12 +53,12 @@ export const RegionDetailsPage: React.FC = () => {
       className="space-y-6"
     >
       <div className="flex items-center justify-between">
-        <div>
+        <motion.div variants={bounceIn} initial="hidden" animate="visible">
           <Text variant="h1">{data.name}</Text>
           <Text variant="body" className="mt-1">
-            {data.code}
+            {data.nameFA} — {data.code}
           </Text>
-        </div>
+        </motion.div>
         <div className="flex items-center gap-3">
           <RegionStatusBadge status={data.status} />
           <AppButton variant="secondary" onClick={() => navigate(-1)}>
@@ -57,18 +67,25 @@ export const RegionDetailsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Energy Flow 3D */}
+      <motion.div variants={slideUp} initial="hidden" animate="visible">
+        <ThreeCanvasShell height="180px" className="w-full">
+          <EnergyFlowScene />
+        </ThreeCanvasShell>
+      </motion.div>
+
       <motion.div
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
-        <motion.div variants={slideUp}>
+        <motion.div variants={popIn}>
           <AppCard className="flex flex-col items-center py-6">
             <ReliabilityScore score={data.reliabilityScore} size="lg" />
           </AppCard>
         </motion.div>
-        <motion.div variants={slideUp}>
+        <motion.div variants={popIn}>
           <AppCard>
             <p className="text-xs text-gray-500 dark:text-gray-400">{t("detail.customers")}</p>
             <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
@@ -76,15 +93,19 @@ export const RegionDetailsPage: React.FC = () => {
             </p>
           </AppCard>
         </motion.div>
-        <motion.div variants={slideUp}>
+        <motion.div variants={popIn}>
           <AppCard>
             <p className="text-xs text-gray-500 dark:text-gray-400">{t("detail.activeOutages")}</p>
-            <p className="mt-1 text-2xl font-bold text-danger-600 dark:text-danger-400">
+            <motion.p
+              className="mt-1 text-2xl font-bold text-danger-600 dark:text-danger-400"
+              animate={data.activeOutages > 0 ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
               {data.activeOutages}
-            </p>
+            </motion.p>
           </AppCard>
         </motion.div>
-        <motion.div variants={slideUp}>
+        <motion.div variants={popIn}>
           <AppCard>
             <p className="text-xs text-gray-500 dark:text-gray-400">{t("detail.avgResolution")}</p>
             <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
@@ -93,6 +114,18 @@ export const RegionDetailsPage: React.FC = () => {
           </AppCard>
         </motion.div>
       </motion.div>
+
+      {/* Babylon.js Transformer Scene */}
+      <motion.div variants={slideUp} initial="hidden" animate="visible">
+        <BabylonCanvas height="200px" scene="transformer" className="w-full" />
+      </motion.div>
+
+      {/* Cities Grid */}
+      {data.cities && data.cities.length > 0 && (
+        <motion.div variants={slideUp} initial="hidden" animate="visible">
+          <CityGrid cities={data.cities} regionName={data.name} />
+        </motion.div>
+      )}
 
       <RegionOutageTrendChart outages={data.outages} />
 

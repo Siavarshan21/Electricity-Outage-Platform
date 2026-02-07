@@ -8,6 +8,15 @@
   "totalOutages": "إجمالي الانقطاعات",
   "reliabilityChart": "مقارنة الموثوقية",
   "outageTrend": "توزيع الانقطاعات",
+  "iranMap": "خريطة شبكة الكهرباء الإيرانية",
+  "clickToView": "انقر لعرض التفاصيل",
+  "citiesIn": "المدن في {{region}}",
+  "population": "السكان",
+  "coordinates": "الإحداثيات",
+  "cityOutages": "الانقطاعات النشطة",
+  "viewOnMap": "عرض على الخريطة",
+  "mapView": "عرض الخريطة",
+  "gridView": "عرض الشبكة",
   "status": {
     "healthy": "سليم",
     "degraded": "متدهور",
@@ -25,7 +34,9 @@
     "customers": "إجمالي العملاء",
     "activeOutages": "الانقطاعات النشطة",
     "avgResolution": "متوسط الحل",
-    "outagesInRegion": "الانقطاعات في المنطقة"
+    "outagesInRegion": "الانقطاعات في المنطقة",
+    "cities": "المدن",
+    "provinceName": "اسم الاستان (فارسی)"
   },
   "error": {
     "title": "خطأ في تحميل المناطق",

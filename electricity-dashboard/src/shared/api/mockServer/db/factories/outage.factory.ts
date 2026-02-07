@@ -1,27 +1,7 @@
 import type { Outage, OutageTimelineEvent } from "@/entities/outage/model/outage.types";
 import type { OutageId, RegionId } from "@/shared/types/brand";
 import { randomInt, randomFloat } from "@/shared/utils/numbers";
-
-const cities = [
-  "Riyadh",
-  "Jeddah",
-  "Dammam",
-  "Mecca",
-  "Medina",
-  "Tabuk",
-  "Abha",
-  "Khamis Mushait",
-  "Hail",
-  "Najran",
-];
-
-const regionNames = [
-  "Central Region",
-  "Western Region",
-  "Eastern Region",
-  "Northern Region",
-  "Southern Region",
-];
+import { IRAN_PROVINCES } from "./region.factory";
 
 const titles = [
   "Power Line Fault",
@@ -34,6 +14,11 @@ const titles = [
   "Equipment Malfunction",
   "Voltage Fluctuation",
   "Distribution Failure",
+  "High Voltage Tower Collapse",
+  "Underground Cable Rupture",
+  "Capacitor Bank Failure",
+  "Relay Protection Trip",
+  "Generator Outage",
 ];
 
 const statuses = ["active", "resolved", "scheduled", "investigating"] as const;
@@ -45,6 +30,9 @@ export function createOutage(index: number): Outage {
   const startDate = new Date();
   startDate.setHours(startDate.getHours() - randomInt(1, 72));
   const durationMinutes = randomInt(30, 480);
+
+  const province = IRAN_PROVINCES[index % IRAN_PROVINCES.length];
+  const city = province.cities[index % province.cities.length];
 
   const resolvedAt =
     status === "resolved"
@@ -59,21 +47,21 @@ export function createOutage(index: number): Outage {
   return {
     id: `outage_${index + 1}` as OutageId,
     title: titles[index % titles.length],
-    description: `${titles[index % titles.length]} affecting ${cities[index % cities.length]} area. Teams are working on resolution.`,
+    description: `${titles[index % titles.length]} affecting ${city.name} area in ${province.name} province. Teams are working on resolution.`,
     status,
     type: types[index % types.length],
     severity: severities[index % severities.length],
-    regionId: `region_${(index % 5) + 1}` as RegionId,
-    regionName: regionNames[index % regionNames.length],
-    city: cities[index % cities.length],
+    regionId: `region_${(index % IRAN_PROVINCES.length) + 1}` as RegionId,
+    regionName: province.name,
+    city: city.name,
     affectedCustomers: randomInt(100, 50000),
     startedAt: startDate.toISOString(),
     estimatedRestorationAt,
     resolvedAt,
     durationMinutes,
     coordinates: {
-      lat: randomFloat(17, 32),
-      lng: randomFloat(36, 55),
+      lat: city.lat + randomFloat(-0.1, 0.1),
+      lng: city.lng + randomFloat(-0.1, 0.1),
     },
     createdAt: startDate.toISOString(),
     updatedAt: new Date().toISOString(),

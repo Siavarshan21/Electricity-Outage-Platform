@@ -11,5 +11,8 @@
   "noActiveOutages": "لا توجد انقطاعات نشطة في الوقت الحالي",
   "liveAlerts": "التنبيهات المباشرة",
   "regionHealth": "تصنيف صحة المناطق",
-  "activeOutages": "انقطاعات نشطة"
+  "activeOutages": "انقطاعات نشطة",
+  "powerGrid3d": "تصور ثلاثي الأبعاد لشبكة الكهرباء",
+  "iranMapOverview": "نظرة عامة على شبكة إيران",
+  "energyFlow": "مراقب تدفق الطاقة"
 }

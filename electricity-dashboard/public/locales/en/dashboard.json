@@ -11,5 +11,8 @@
   "noActiveOutages": "No active outages at this time",
   "liveAlerts": "Live Alerts",
   "regionHealth": "Region Health Ranking",
-  "activeOutages": "active outages"
+  "activeOutages": "active outages",
+  "powerGrid3d": "3D Power Grid Visualization",
+  "iranMapOverview": "Iran Grid Overview",
+  "energyFlow": "Energy Flow Monitor"
 }

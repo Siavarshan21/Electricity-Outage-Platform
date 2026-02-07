@@ -8,6 +8,15 @@
   "totalOutages": "total outages",
   "reliabilityChart": "Reliability Comparison",
   "outageTrend": "Outage Distribution",
+  "iranMap": "Iran Power Grid Map",
+  "clickToView": "Click to view details",
+  "citiesIn": "Cities in {{region}}",
+  "population": "Population",
+  "coordinates": "Coordinates",
+  "cityOutages": "Active Outages",
+  "viewOnMap": "View on Map",
+  "mapView": "Map View",
+  "gridView": "Grid View",
   "status": {
     "healthy": "Healthy",
     "degraded": "Degraded",
@@ -25,7 +34,9 @@
     "customers": "Total Customers",
     "activeOutages": "Active Outages",
     "avgResolution": "Avg Resolution",
-    "outagesInRegion": "Outages in Region"
+    "outagesInRegion": "Outages in Region",
+    "cities": "Cities",
+    "provinceName": "Province Name (Farsi)"
   },
   "error": {
     "title": "Error Loading Regions",

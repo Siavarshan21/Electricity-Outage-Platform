@@ -15,9 +15,9 @@ export interface SeedData {
 }
 
 export function seedDatabase(): SeedData {
-  const outages = Array.from({ length: 25 }, (_, i) => createOutage(i));
-  const regions = Array.from({ length: 5 }, (_, i) => createRegion(i));
-  const alerts = Array.from({ length: 20 }, (_, i) => createAlert(i));
+  const outages = Array.from({ length: 50 }, (_, i) => createOutage(i));
+  const regions = Array.from({ length: 31 }, (_, i) => createRegion(i));
+  const alerts = Array.from({ length: 30 }, (_, i) => createAlert(i));
   const users = [createUser()];
 
   return { outages, regions, alerts, users };

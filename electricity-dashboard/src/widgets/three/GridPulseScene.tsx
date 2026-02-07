@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Line } from "@react-three/drei";
 import type { Group } from "three";
 
 export const GridPulseScene: React.FC = () => {
@@ -37,17 +38,14 @@ export const GridPulseScene: React.FC = () => {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist > 1.2) return null;
           return (
-            <line key={`${i}-${j}`}>
-              <bufferGeometry>
-                <bufferAttribute
-                  attach="attributes-position"
-                  count={2}
-                  array={new Float32Array([...node.position, ...other.position])}
-                  itemSize={3}
-                />
-              </bufferGeometry>
-              <lineBasicMaterial color="#4b5563" opacity={0.3} transparent />
-            </line>
+            <Line
+              key={`${i}-${j}`}
+              points={[node.position, other.position]}
+              color="#4b5563"
+              lineWidth={1}
+              transparent
+              opacity={0.3}
+            />
           );
         }),
       )}
