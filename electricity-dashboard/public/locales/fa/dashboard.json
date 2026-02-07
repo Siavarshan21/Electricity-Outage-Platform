@@ -1,0 +1,18 @@
+{
+  "title": "داشبورد",
+  "subtitle": "نمای کلی لحظه‌ای از سلامت شبکه و اطلاعات قطعی‌ها",
+  "kpi": {
+    "activeOutages": "قطعی‌های فعال",
+    "affectedCustomers": "مشترکین متأثر",
+    "avgResolutionTime": "میانگین زمان رفع",
+    "reliability": "میانگین پایداری"
+  },
+  "activeOutagesMap": "قطعی‌های فعال",
+  "noActiveOutages": "در حال حاضر قطعی فعالی وجود ندارد",
+  "liveAlerts": "هشدارهای زنده",
+  "regionHealth": "رتبه‌بندی سلامت مناطق",
+  "activeOutages": "قطعی‌های فعال",
+  "powerGrid3d": "تصویرسازی سه‌بعدی شبکه برق",
+  "iranMapOverview": "نمای کلی شبکه ایران",
+  "energyFlow": "نمایشگر جریان انرژی"
+}

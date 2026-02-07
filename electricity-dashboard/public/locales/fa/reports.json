@@ -1,0 +1,29 @@
+{
+  "title": "گزارش‌ها",
+  "subtitle": "تحلیل و بینش درباره عملکرد شبکه",
+  "exportCsv": "خروجی CSV",
+  "kpi": {
+    "totalOutages": "کل قطعی‌ها",
+    "activeOutages": "قطعی‌های فعال",
+    "resolvedOutages": "قطعی‌های رفع شده",
+    "affectedCustomers": "مشترکین متأثر",
+    "avgResolution": "میانگین رفع",
+    "totalAlerts": "کل هشدارها",
+    "criticalAlerts": "هشدارهای بحرانی",
+    "reliability": "میانگین پایداری"
+  },
+  "charts": {
+    "monthlyTrend": "روند ماهانه قطعی‌ها",
+    "severityDistribution": "توزیع شدت",
+    "severity": {
+      "low": "کم",
+      "medium": "متوسط",
+      "high": "زیاد",
+      "critical": "بحرانی"
+    }
+  },
+  "error": {
+    "title": "خطا در بارگذاری گزارش‌ها",
+    "description": "بارگذاری داده‌های گزارش ناموفق بود. لطفاً دوباره تلاش کنید."
+  }
+}

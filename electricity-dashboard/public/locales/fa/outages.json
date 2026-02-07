@@ -1,0 +1,66 @@
+{
+  "title": "قطعی‌ها",
+  "subtitle": "نظارت و مدیریت تمام قطعی‌های برق در سراسر مناطق",
+  "status": {
+    "active": "فعال",
+    "resolved": "رفع شده",
+    "scheduled": "زمان‌بندی شده",
+    "investigating": "در حال بررسی"
+  },
+  "type": {
+    "planned": "برنامه‌ریزی شده",
+    "unplanned": "برنامه‌ریزی نشده",
+    "emergency": "اضطراری",
+    "maintenance": "تعمیرات"
+  },
+  "severity": {
+    "low": "کم",
+    "medium": "متوسط",
+    "high": "زیاد",
+    "critical": "بحرانی"
+  },
+  "table": {
+    "title": "عنوان",
+    "status": "وضعیت",
+    "type": "نوع",
+    "region": "منطقه",
+    "city": "شهر",
+    "affected": "متأثرشدگان",
+    "duration": "مدت زمان",
+    "startedAt": "زمان شروع"
+  },
+  "filters": {
+    "search": "جستجو در قطعی‌ها...",
+    "allStatuses": "همه وضعیت‌ها",
+    "allTypes": "همه انواع",
+    "allSeverities": "همه سطوح شدت",
+    "reset": "بازنشانی فیلترها"
+  },
+  "duration": "مدت زمان",
+  "affectedCustomers": "مشترکین متأثر",
+  "timeline": {
+    "title": "جدول زمانی"
+  },
+  "detail": {
+    "back": "بازگشت",
+    "status": "وضعیت",
+    "type": "نوع",
+    "region": "منطقه",
+    "city": "شهر",
+    "affected": "مشترکین متأثر",
+    "duration": "مدت زمان",
+    "startedAt": "زمان شروع",
+    "eta": "زمان تخمینی بازیابی",
+    "unknown": "نامشخص"
+  },
+  "error": {
+    "title": "خطا در بارگذاری قطعی‌ها",
+    "description": "بارگذاری داده‌های قطعی ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "notFound": "قطعی یافت نشد",
+    "notFoundDescription": "قطعی مورد نظر شما وجود ندارد."
+  },
+  "empty": {
+    "title": "قطعی یافت نشد",
+    "description": "هیچ قطعی با فیلترهای فعلی مطابقت ندارد."
+  }
+}

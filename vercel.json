@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd electricity-dashboard && pnpm install && pnpm build",
+  "outputDirectory": "electricity-dashboard/dist",
+  "framework": "vite",
+  "installCommand": "cd electricity-dashboard && pnpm install",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

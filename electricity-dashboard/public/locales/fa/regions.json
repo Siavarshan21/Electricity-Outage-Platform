@@ -1,0 +1,51 @@
+{
+  "title": "مناطق",
+  "subtitle": "مشاهده داده‌های پایداری و قطعی برای تمام مناطق",
+  "searchPlaceholder": "جستجو در مناطق...",
+  "reliability": "پایداری",
+  "customers": "مشترکین",
+  "activeOutages": "قطعی‌های فعال",
+  "totalOutages": "کل قطعی‌ها",
+  "reliabilityChart": "مقایسه پایداری",
+  "outageTrend": "توزیع قطعی‌ها",
+  "iranMap": "نقشه شبکه برق ایران",
+  "clickToView": "برای مشاهده جزئیات کلیک کنید",
+  "citiesIn": "شهرهای {{region}}",
+  "population": "جمعیت",
+  "coordinates": "مختصات",
+  "cityOutages": "قطعی‌های فعال",
+  "viewOnMap": "نمایش روی نقشه",
+  "mapView": "نمای نقشه",
+  "gridView": "نمای جدول",
+  "status": {
+    "healthy": "سالم",
+    "degraded": "ناپایدار",
+    "critical": "بحرانی",
+    "offline": "آفلاین"
+  },
+  "outageStatus": {
+    "active": "فعال",
+    "resolved": "رفع شده",
+    "scheduled": "زمان‌بندی شده",
+    "investigating": "در حال بررسی"
+  },
+  "detail": {
+    "back": "بازگشت",
+    "customers": "کل مشترکین",
+    "activeOutages": "قطعی‌های فعال",
+    "avgResolution": "میانگین رفع",
+    "outagesInRegion": "قطعی‌های منطقه",
+    "cities": "شهرها",
+    "provinceName": "نام استان"
+  },
+  "error": {
+    "title": "خطا در بارگذاری مناطق",
+    "description": "بارگذاری داده‌های مناطق ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "notFound": "منطقه یافت نشد",
+    "notFoundDescription": "منطقه مورد نظر شما وجود ندارد."
+  },
+  "empty": {
+    "title": "منطقه‌ای یافت نشد",
+    "description": "هیچ منطقه‌ای با جستجوی شما مطابقت ندارد."
+  }
+}
