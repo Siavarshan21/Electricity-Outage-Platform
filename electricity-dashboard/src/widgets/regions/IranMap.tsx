@@ -1,233 +1,254 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
+import { geoMercator, geoPath } from "d3-geo";
 import { AppCard } from "@/shared/ui/card/AppCard";
+import {
+  iranProvincesGeoJSON,
+  type IranProvinceFeature,
+} from "@/shared/data/iranProvincesGeo";
 import type { Region } from "@/entities/region/model/region.types";
 
 interface IranMapProps {
   regions: Region[];
 }
 
-interface ProvinceShape {
-  code: string;
-  name: string;
-  cx: number;
-  cy: number;
-  path: string;
-}
+const MAP_WIDTH = 700;
+const MAP_HEIGHT = 750;
 
-const IRAN_MAP_WIDTH = 600;
-const IRAN_MAP_HEIGHT = 700;
-
-function latLngToXY(lat: number, lng: number): { x: number; y: number } {
-  const minLat = 25;
-  const maxLat = 40;
-  const minLng = 44;
-  const maxLng = 63.5;
-  const x = ((lng - minLng) / (maxLng - minLng)) * IRAN_MAP_WIDTH;
-  const y = ((maxLat - lat) / (maxLat - minLat)) * IRAN_MAP_HEIGHT;
-  return { x, y };
-}
-
-function generateProvincePath(cx: number, cy: number, size: number): string {
-  const points: string[] = [];
-  const sides = 6 + Math.floor(Math.random() * 3);
-  for (let i = 0; i < sides; i++) {
-    const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
-    const jitter = 0.75 + Math.random() * 0.5;
-    const r = size * jitter;
-    const px = cx + Math.cos(angle) * r;
-    const py = cy + Math.sin(angle) * r;
-    points.push(`${i === 0 ? "M" : "L"} ${px.toFixed(1)} ${py.toFixed(1)}`);
-  }
-  return points.join(" ") + " Z";
-}
-
-const getStatusColor = (status: string): string => {
-  switch (status) {
-    case "healthy":
-      return "#22c55e";
-    case "degraded":
-      return "#f59e0b";
-    case "critical":
-      return "#ef4444";
-    case "offline":
-      return "#6b7280";
-    default:
-      return "#3b82f6";
-  }
+const PROVINCE_COLORS: Record<string, string> = {
+  TEH: "#e74c3c",
+  ISF: "#7f8c8d",
+  FAR: "#8b4513",
+  KHR: "#d4a76a",
+  EAZ: "#2c3e50",
+  WAZ: "#e74c3c",
+  KHZ: "#27ae60",
+  KER: "#5d6d3f",
+  ALB: "#f39c12",
+  QAZ: "#8b8b00",
+  GIL: "#3498db",
+  MAZ: "#5dade2",
+  MRK: "#e8a0bf",
+  HRM: "#2ecc71",
+  LOR: "#27ae60",
+  SBL: "#2c3e50",
+  KRD: "#c0392b",
+  HAM: "#f5cba7",
+  KSH: "#8e44ad",
+  SKH: "#a0522d",
+  NKH: "#7d9f85",
+  YZD: "#e74c3c",
+  QOM: "#d5a6bd",
+  ZAN: "#2ecc71",
+  SEM: "#e8a0bf",
+  ARD: "#16a085",
+  BSH: "#f1948a",
+  GOL: "#a9dfbf",
+  ILM: "#17a589",
+  CHB: "#f4d03f",
+  KBA: "#d35400",
 };
 
-const getStatusGlow = (status: string): string => {
+const getStatusOverlay = (status: string): string => {
   switch (status) {
-    case "healthy":
-      return "#22c55e40";
-    case "degraded":
-      return "#f59e0b40";
     case "critical":
-      return "#ef444440";
+      return "rgba(239, 68, 68, 0.4)";
     case "offline":
-      return "#6b728040";
+      return "rgba(107, 114, 128, 0.5)";
     default:
-      return "#3b82f640";
+      return "transparent";
   }
 };
 
 export const IranMap: React.FC<IranMapProps> = ({ regions }) => {
   const { t } = useTranslation("regions");
   const navigate = useNavigate();
-  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
+  const [hoveredCode, setHoveredCode] = useState<string | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  const provinceShapes: ProvinceShape[] = useMemo(() => {
-    return regions.map((region) => {
-      const { x, y } = latLngToXY(region.coordinates.lat, region.coordinates.lng);
-      const size = 28 + (region.totalCustomers / 500000) * 12;
-      return {
-        code: region.code,
-        name: region.name,
-        cx: x,
-        cy: y,
-        path: generateProvincePath(x, y, size),
-      };
-    });
+  // Create a map from region code to region data
+  const regionByCode = useMemo(() => {
+    const map = new Map<string, Region>();
+    regions.forEach((r) => map.set(r.code, r));
+    return map;
   }, [regions]);
 
-  const hoveredRegionData = regions.find((r) => r.id === hoveredRegion);
+  // Create d3-geo projection and path generator
+  const { projection, pathGenerator } = useMemo(() => {
+    const proj = geoMercator()
+      .center([53.5, 32.5])
+      .scale(2800)
+      .translate([MAP_WIDTH / 2, MAP_HEIGHT / 2]);
+
+    const pg = geoPath().projection(proj);
+    return { projection: proj, pathGenerator: pg };
+  }, []);
+
+  // Pre-compute province paths and centroids
+  const provinceRenderData = useMemo(() => {
+    return iranProvincesGeoJSON.features.map((feature) => {
+      const path = pathGenerator(feature as unknown as GeoJSON.Feature) || "";
+      const centroid = pathGenerator.centroid(feature as unknown as GeoJSON.Feature);
+      return {
+        feature,
+        path,
+        centroid,
+        code: feature.properties.code,
+        name: feature.properties.name,
+        nameFA: feature.properties.nameFA,
+      };
+    });
+  }, [pathGenerator]);
+
+  const hoveredRegion = useMemo(() => {
+    if (!hoveredCode) return null;
+    return regionByCode.get(hoveredCode) ?? null;
+  }, [hoveredCode, regionByCode]);
+
+  const handleMouseEnter = useCallback(
+    (code: string, e: React.MouseEvent<SVGPathElement>) => {
+      setHoveredCode(code);
+      const svg = (e.target as SVGElement).ownerSVGElement;
+      if (svg) {
+        const rect = svg.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setTooltipPos({ x, y });
+      }
+    },
+    [],
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<SVGPathElement>) => {
+      const svg = (e.target as SVGElement).ownerSVGElement;
+      if (svg) {
+        const rect = svg.getBoundingClientRect();
+        setTooltipPos({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        });
+      }
+    },
+    [],
+  );
+
+  const handleClick = useCallback(
+    (code: string) => {
+      const region = regionByCode.get(code);
+      if (region) {
+        navigate(`/regions/${region.id}`);
+      }
+    },
+    [regionByCode, navigate],
+  );
 
   return (
     <AppCard className="relative overflow-hidden">
       <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {t("iranMap")}
       </h3>
-      <div className="relative w-full" style={{ aspectRatio: `${IRAN_MAP_WIDTH}/${IRAN_MAP_HEIGHT}` }}>
+      <div className="relative mx-auto" style={{ maxWidth: MAP_WIDTH }}>
         <svg
-          viewBox={`0 0 ${IRAN_MAP_WIDTH} ${IRAN_MAP_HEIGHT}`}
+          viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
           className="h-full w-full"
-          style={{ filter: "drop-shadow(0 0 10px rgba(59, 130, 246, 0.15))" }}
+          style={{ filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3))" }}
         >
           <defs>
-            <radialGradient id="mapBg" cx="50%" cy="50%" r="70%">
-              <stop offset="0%" stopColor="#1e293b" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#0f172a" stopOpacity="0.6" />
-            </radialGradient>
-            {regions.map((region) => (
-              <filter key={`glow-${region.id}`} id={`glow-${region.id}`}>
-                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            ))}
+            <filter id="provinceShadow">
+              <feDropShadow dx="1" dy="1" stdDeviation="1.5" floodOpacity="0.25" />
+            </filter>
+            <filter id="provinceGlow">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
           </defs>
 
-          <rect width={IRAN_MAP_WIDTH} height={IRAN_MAP_HEIGHT} fill="url(#mapBg)" rx="8" />
+          {/* Background */}
+          <rect width={MAP_WIDTH} height={MAP_HEIGHT} fill="#0f172a" rx="8" />
 
-          {/* Connection lines between neighboring provinces */}
-          {provinceShapes.map((p1, i) =>
-            provinceShapes.slice(i + 1).map((p2, j) => {
-              const dist = Math.sqrt((p1.cx - p2.cx) ** 2 + (p1.cy - p2.cy) ** 2);
-              if (dist > 100) return null;
-              return (
-                <line
-                  key={`conn-${i}-${j}`}
-                  x1={p1.cx}
-                  y1={p1.cy}
-                  x2={p2.cx}
-                  y2={p2.cy}
-                  stroke="#3b82f6"
-                  strokeOpacity="0.15"
-                  strokeWidth="0.5"
-                  strokeDasharray="4 2"
-                />
-              );
-            })
-          )}
-
-          {/* Province shapes */}
-          {provinceShapes.map((shape, idx) => {
-            const region = regions[idx];
-            if (!region) return null;
-            const isHovered = hoveredRegion === region.id;
-            const color = getStatusColor(region.status);
-            const glow = getStatusGlow(region.status);
+          {/* Province polygons */}
+          {provinceRenderData.map((prov) => {
+            const region = regionByCode.get(prov.code);
+            const isHovered = hoveredCode === prov.code;
+            const baseColor = PROVINCE_COLORS[prov.code] || "#6b7280";
+            const overlay = region ? getStatusOverlay(region.status) : "transparent";
 
             return (
-              <g key={region.id}>
-                {/* Glow circle */}
-                <circle
-                  cx={shape.cx}
-                  cy={shape.cy}
-                  r={isHovered ? 35 : 20}
-                  fill={glow}
-                  style={{ transition: "r 0.3s ease, fill 0.3s ease" }}
-                />
-
-                {/* Province shape */}
+              <g key={prov.code}>
+                {/* Province fill */}
                 <path
-                  d={shape.path}
-                  fill={isHovered ? color : `${color}60`}
-                  stroke={color}
-                  strokeWidth={isHovered ? 2 : 1}
+                  d={prov.path}
+                  fill={baseColor}
+                  stroke="#1e293b"
+                  strokeWidth={isHovered ? 2.5 : 1}
                   className="cursor-pointer"
                   style={{
-                    transition: "fill 0.3s ease, stroke-width 0.3s ease",
-                    filter: isHovered ? `url(#glow-${region.id})` : "none",
+                    transition: "stroke-width 0.2s ease, opacity 0.2s ease",
+                    opacity: isHovered ? 1 : 0.85,
+                    filter: isHovered ? "url(#provinceGlow)" : "url(#provinceShadow)",
                   }}
-                  onMouseEnter={(e) => {
-                    setHoveredRegion(region.id);
-                    const rect = (e.target as SVGElement).ownerSVGElement?.getBoundingClientRect();
-                    if (rect) {
-                      const scaleX = rect.width / IRAN_MAP_WIDTH;
-                      const scaleY = rect.height / IRAN_MAP_HEIGHT;
-                      setTooltipPos({
-                        x: shape.cx * scaleX,
-                        y: shape.cy * scaleY,
-                      });
-                    }
-                  }}
-                  onMouseLeave={() => setHoveredRegion(null)}
-                  onClick={() => navigate(`/regions/${region.id}`)}
+                  onMouseEnter={(e) => handleMouseEnter(prov.code, e)}
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={() => setHoveredCode(null)}
+                  onClick={() => handleClick(prov.code)}
                 />
 
-                {/* Province name */}
-                <text
-                  x={shape.cx}
-                  y={shape.cy}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill="white"
-                  fontSize="8"
-                  fontWeight={isHovered ? "bold" : "normal"}
-                  className="pointer-events-none select-none"
-                  style={{ transition: "font-weight 0.2s ease" }}
-                >
-                  {region.code}
-                </text>
+                {/* Status overlay for critical/offline */}
+                {overlay !== "transparent" && (
+                  <path
+                    d={prov.path}
+                    fill={overlay}
+                    className="pointer-events-none"
+                  />
+                )}
 
-                {/* Active outage indicator */}
-                {region.activeOutages > 0 && (
-                  <>
+                {/* Province label */}
+                {prov.centroid[0] && prov.centroid[1] && (
+                  <text
+                    x={prov.centroid[0]}
+                    y={prov.centroid[1]}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fill="white"
+                    fontSize={isHovered ? "9" : "7"}
+                    fontWeight={isHovered ? "bold" : "600"}
+                    className="pointer-events-none select-none"
+                    style={{
+                      textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                      transition: "font-size 0.2s ease",
+                    }}
+                  >
+                    {prov.name.length > 12 ? prov.code : prov.name.toUpperCase()}
+                  </text>
+                )}
+
+                {/* Active outage badge */}
+                {region && region.activeOutages > 0 && prov.centroid[0] && prov.centroid[1] && (
+                  <g>
                     <circle
-                      cx={shape.cx + 15}
-                      cy={shape.cy - 15}
-                      r="7"
+                      cx={prov.centroid[0] + 18}
+                      cy={prov.centroid[1] - 12}
+                      r="8"
                       fill="#ef4444"
-                      stroke="#1e293b"
-                      strokeWidth="1"
+                      stroke="#0f172a"
+                      strokeWidth="1.5"
                     >
                       <animate
                         attributeName="r"
-                        values="6;8;6"
+                        values="7;9;7"
                         dur="2s"
                         repeatCount="indefinite"
                       />
                     </circle>
                     <text
-                      x={shape.cx + 15}
-                      y={shape.cy - 15}
+                      x={prov.centroid[0] + 18}
+                      y={prov.centroid[1] - 12}
                       textAnchor="middle"
                       dominantBaseline="central"
                       fill="white"
@@ -237,60 +258,86 @@ export const IranMap: React.FC<IranMapProps> = ({ regions }) => {
                     >
                       {region.activeOutages}
                     </text>
-                  </>
+                  </g>
                 )}
               </g>
             );
           })}
 
-          {/* Animated electricity particles on connections */}
-          {provinceShapes.slice(0, 10).map((p, i) => {
-            const next = provinceShapes[(i + 1) % provinceShapes.length];
+          {/* Power grid lines connecting province centers */}
+          {provinceRenderData.map((p1, i) =>
+            provinceRenderData.slice(i + 1).map((p2, j) => {
+              if (!p1.centroid[0] || !p2.centroid[0]) return null;
+              const dx = p1.centroid[0] - p2.centroid[0];
+              const dy = p1.centroid[1] - p2.centroid[1];
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist > 80) return null;
+              return (
+                <line
+                  key={`grid-${i}-${j}`}
+                  x1={p1.centroid[0]}
+                  y1={p1.centroid[1]}
+                  x2={p2.centroid[0]}
+                  y2={p2.centroid[1]}
+                  stroke="#3b82f6"
+                  strokeOpacity="0.08"
+                  strokeWidth="0.5"
+                  strokeDasharray="3 3"
+                  className="pointer-events-none"
+                />
+              );
+            }),
+          )}
+
+          {/* Animated energy particles */}
+          {provinceRenderData.slice(0, 8).map((p, i) => {
+            const next = provinceRenderData[(i + 1) % provinceRenderData.length];
+            if (!p.centroid[0] || !next.centroid[0]) return null;
             return (
-              <circle key={`particle-${i}`} r="2" fill="#60a5fa" opacity="0.8">
+              <circle key={`pulse-${i}`} r="2" fill="#60a5fa" opacity="0.7">
                 <animateMotion
-                  dur={`${3 + i * 0.5}s`}
+                  dur={`${4 + i * 0.7}s`}
                   repeatCount="indefinite"
-                  path={`M ${p.cx} ${p.cy} L ${next.cx} ${next.cy}`}
+                  path={`M ${p.centroid[0]} ${p.centroid[1]} L ${next.centroid[0]} ${next.centroid[1]}`}
                 />
               </circle>
             );
           })}
         </svg>
 
-        {/* Tooltip */}
+        {/* Hover tooltip */}
         <AnimatePresence>
-          {hoveredRegionData && (
+          {hoveredRegion && (
             <motion.div
               initial={{ opacity: 0, y: 5, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 5, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="pointer-events-none absolute z-20 rounded-lg border border-gray-700 bg-gray-900/95 px-3 py-2 text-xs text-white shadow-xl backdrop-blur-sm"
+              className="pointer-events-none absolute z-20 min-w-[180px] rounded-lg border border-gray-600 bg-gray-900/95 px-4 py-3 text-xs text-white shadow-2xl backdrop-blur-sm"
               style={{
-                left: tooltipPos.x + 20,
-                top: tooltipPos.y - 40,
+                left: Math.min(tooltipPos.x + 16, MAP_WIDTH - 200),
+                top: tooltipPos.y - 60,
               }}
             >
-              <p className="font-bold text-sm">{hoveredRegionData.name}</p>
-              <p className="text-gray-400">{hoveredRegionData.nameFA}</p>
-              <div className="mt-1 space-y-0.5">
-                <p>
-                  <span className="text-gray-400">{t("detail.customers")}:</span>{" "}
-                  {hoveredRegionData.totalCustomers.toLocaleString()}
-                </p>
-                <p>
-                  <span className="text-gray-400">{t("detail.activeOutages")}:</span>{" "}
-                  <span className={hoveredRegionData.activeOutages > 0 ? "text-red-400 font-bold" : "text-green-400"}>
-                    {hoveredRegionData.activeOutages}
+              <p className="text-sm font-bold">{hoveredRegion.name}</p>
+              <p className="text-gray-400">{hoveredRegion.nameFA}</p>
+              <div className="mt-2 space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">{t("detail.customers")}:</span>
+                  <span className="font-medium">{hoveredRegion.totalCustomers.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">{t("detail.activeOutages")}:</span>
+                  <span className={hoveredRegion.activeOutages > 0 ? "font-bold text-red-400" : "text-green-400"}>
+                    {hoveredRegion.activeOutages}
                   </span>
-                </p>
-                <p>
-                  <span className="text-gray-400">{t("reliability")}:</span>{" "}
-                  {hoveredRegionData.reliabilityScore.toFixed(1)}%
-                </p>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">{t("reliability")}:</span>
+                  <span className="font-medium">{hoveredRegion.reliabilityScore.toFixed(1)}%</span>
+                </div>
               </div>
-              <p className="mt-1 text-[10px] text-primary-400">{t("clickToView")}</p>
+              <p className="mt-2 text-center text-[10px] text-primary-400">{t("clickToView")}</p>
             </motion.div>
           )}
         </AnimatePresence>

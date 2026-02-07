@@ -94,10 +94,11 @@ export const IRAN_PROVINCES: ProvinceData[] = [
     ],
   },
   {
-    name: "Razavi Khorasan", nameFA: "خراسان رضوی", code: "RKH", lat: 36.2972, lng: 59.6067,
+    name: "Qazvin", nameFA: "قزوین", code: "QAZ", lat: 36.2697, lng: 50.0049,
     cities: [
-      { name: "Mashhad", nameFA: "مشهد", lat: 36.2972, lng: 59.6067, population: 3370000 },
-      { name: "Neyshabur", nameFA: "نیشابور", lat: 36.2141, lng: 58.7962, population: 280000 },
+      { name: "Qazvin", nameFA: "قزوین", lat: 36.2697, lng: 50.0049, population: 580000 },
+      { name: "Takestan", nameFA: "تاکستان", lat: 36.0693, lng: 49.6958, population: 100000 },
+      { name: "Alvand", nameFA: "الوند", lat: 36.3167, lng: 49.1667, population: 50000 },
     ],
   },
   {
