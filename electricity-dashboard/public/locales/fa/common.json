@@ -11,6 +11,9 @@
   "filter": "فیلتر",
   "reset": "بازنشانی",
   "noResults": "نتیجه‌ای یافت نشد",
+  "searchPlaceholder": "جستجو مناطق، قطعی‌ها، شهرها...",
+  "regions": "مناطق",
+  "outages": "قطعی‌ها",
   "toggleTheme": "تغییر پوسته",
   "emptyState": {
     "title": "داده‌ای وجود ندارد",

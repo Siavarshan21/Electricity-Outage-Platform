@@ -33,6 +33,7 @@
     "react-i18next": "^15.0.0",
     "react-router-dom": "^6.25.0",
     "react-simple-maps": "^3.0.0",
+    "recharts": "^3.7.0",
     "three": "^0.166.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.4"

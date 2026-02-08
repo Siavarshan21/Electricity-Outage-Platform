@@ -11,6 +11,9 @@
   "filter": "Filter",
   "reset": "Reset",
   "noResults": "No results found",
+  "searchPlaceholder": "Search regions, outages, cities...",
+  "regions": "Regions",
+  "outages": "Outages",
   "toggleTheme": "Toggle theme",
   "emptyState": {
     "title": "No data available",
